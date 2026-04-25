@@ -2167,3 +2167,233 @@ body:has(#consulta-rapida) #contacto .contact__form {
     min-height: 48px;
   }
 }
+
+/* Mobile hardening: compact, readable, no repeated conversion blocks. */
+@media (max-width: 679px) {
+  body {
+    font-size: 16px;
+  }
+
+  .container {
+    padding-inline: 20px;
+  }
+
+  .section {
+    padding: 34px 0 !important;
+  }
+
+  .hero {
+    padding: 24px 0 30px !important;
+  }
+
+  h1,
+  .display {
+    font-size: 2.15rem !important;
+    line-height: 1.04 !important;
+  }
+
+  h2,
+  #servicios .section__header h2 {
+    font-size: 1.82rem !important;
+    line-height: 1.08 !important;
+    text-align: left;
+  }
+
+  h3,
+  .segment-card h3,
+  .team__card h3,
+  .method-card h3 {
+    font-size: 1.34rem !important;
+    line-height: 1.14 !important;
+  }
+
+  p,
+  li,
+  .lead {
+    font-size: 0.96rem !important;
+    line-height: 1.52 !important;
+  }
+
+  .section__header {
+    margin-bottom: 18px !important;
+  }
+
+  .eyebrow,
+  .service-card__meta,
+  .doctor-card__meta,
+  .method-card__num {
+    min-height: 26px;
+    padding: 4px 9px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  .btn {
+    min-height: 46px;
+    padding: 12px 16px;
+    font-size: 0.92rem;
+  }
+
+  .hero__card {
+    display: none;
+  }
+
+  .hero__points {
+    display: none;
+  }
+
+  #servicios .section__header p {
+    font-size: 0.98rem !important;
+    text-align: left;
+  }
+
+  .segment-grid {
+    display: grid;
+    gap: 12px !important;
+  }
+
+  .segment-card {
+    display: block;
+    padding: 18px !important;
+    border: 1px solid rgba(148, 163, 184, 0.32) !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 10px 24px rgba(11, 26, 43, 0.07) !important;
+  }
+
+  .segment-card::after {
+    display: none;
+  }
+
+  .segment-card h3 {
+    margin: 8px 0 8px !important;
+  }
+
+  .segment-card p {
+    margin: 0 0 14px !important;
+    color: var(--gray-700);
+  }
+
+  .segment-card__actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .segment-card__actions .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #consulta-rapida .page-hero__card {
+    display: none;
+  }
+
+  .quick-form {
+    padding: 18px !important;
+    border-radius: 16px !important;
+  }
+
+  .quick-form h2 {
+    font-size: 1.72rem !important;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    min-height: 48px;
+    padding: 12px 13px;
+    border-radius: 13px;
+  }
+
+  .about-compact p:nth-child(n+3) {
+    display: none;
+  }
+
+  .team__card,
+  .method-card,
+  .faq details {
+    padding: 18px !important;
+    border-radius: 16px !important;
+  }
+
+  .team__card p,
+  .method-card p {
+    font-size: 0.95rem !important;
+  }
+
+  .team__avatar {
+    width: 48px !important;
+    height: 48px !important;
+    margin-bottom: 10px;
+  }
+
+  .team__links .btn {
+    width: 100%;
+  }
+
+  .method-steps {
+    gap: 10px !important;
+  }
+
+  .method-card__num {
+    margin-bottom: 8px;
+  }
+
+  #contacto .contact__form,
+  #contactForm {
+    display: none !important;
+  }
+
+  #contacto .contact__info {
+    padding: 18px !important;
+    border-radius: 16px !important;
+  }
+
+  #contacto .doctor-card {
+    padding: 16px !important;
+  }
+
+  #contacto .doctor-card .service-card__meta,
+  #contacto .doctor-card p {
+    display: none;
+  }
+
+  #contacto .doctor-card h4 {
+    margin-bottom: 10px;
+  }
+
+  #contacto .doctor-card .btn {
+    min-height: 44px;
+  }
+
+  .wa-float {
+    width: 46px !important;
+    height: 46px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .wa-float svg {
+    width: 23px;
+    height: 23px;
+  }
+}
+
+@media (max-width: 390px) {
+  h1,
+  .display {
+    font-size: 1.95rem !important;
+  }
+
+  h2,
+  #servicios .section__header h2 {
+    font-size: 1.68rem !important;
+  }
+
+  .container {
+    padding-inline: 18px;
+  }
+}
