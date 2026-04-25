@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Estudio Jurídico TPG</title>
+  <desc id="desc">Asesoramiento legal para empresas, PYMES y particulares.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1a2b"/>
+      <stop offset="100%" stop-color="#14304d"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="1" cy="0" r="1">
+      <stop offset="0%" stop-color="#c9a86a" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#c9a86a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g fill="none" stroke="#c9a86a" stroke-opacity=".32">
+    <path d="M106 110h988"/>
+    <path d="M106 520h988"/>
+  </g>
+  <rect x="106" y="120" width="132" height="132" rx="24" fill="#0f2238" stroke="#c9a86a" stroke-opacity=".6"/>
+  <text x="172" y="202" text-anchor="middle" font-family="Georgia, serif" font-size="54" font-weight="700" fill="#c9a86a">TPG</text>
+  <text x="286" y="190" font-family="Arial, sans-serif" font-size="26" letter-spacing="7" fill="#d1d5db">ESTUDIO JURIDICO</text>
+  <text x="286" y="280" font-family="Georgia, serif" font-size="84" font-weight="700" fill="#ffffff">Estudio Jurídico TPG</text>
+  <text x="286" y="352" font-family="Arial, sans-serif" font-size="34" fill="#e5e7eb">Empresas, PYMES y particulares</text>
+  <text x="286" y="408" font-family="Arial, sans-serif" font-size="28" fill="#c9a86a">Fraude bancario digital • Laboral • Civil • Salud</text>
+  <text x="106" y="566" font-family="Arial, sans-serif" font-size="24" fill="#cbd5e1">estudiojuridicotpg.com.ar</text>
+</svg>

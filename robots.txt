@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.estudiojuridicotpg.com.ar/sitemap.xml
+Sitemap: https://estudiojuridicotpg.com.ar/sitemap.xml
