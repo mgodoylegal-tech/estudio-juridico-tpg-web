@@ -1,6 +1,31 @@
 (function () {
   'use strict';
 
+  const PHONE_BY_TYPE = {
+    'Fraude bancario': '5491155857623',
+    'Empresas / PYMES': '5491155857623',
+    'Empresa / PYME': '5491155857623',
+    'Despidos / laboral / ART': '5491154845455',
+    'Despido / laboral': '5491154845455',
+    'Laboral / ART': '5491154845455',
+    'ART': '5491154845455',
+    'Daños / accidentes': '5491154845455',
+    'Daños y perjuicios': '5491154845455',
+    'Accidente de tránsito': '5491154845455',
+    'Sucesiones / civil patrimonial': '5491160231009',
+    'Sucesión': '5491160231009',
+    'Usucapión / inmuebles': '5491160231009',
+    'Usucapión': '5491160231009',
+    'Familia / divorcios': '5491160231009',
+    'Familia': '5491160231009',
+    'Divorcio': '5491160231009',
+    'Alimentos': '5491160231009',
+    'Amparos de salud': '5491155857623',
+    'Obra social / prepaga': '5491155857623',
+    'Defensa del consumidor': '5491155857623',
+    'Otro': '5491155857623'
+  };
+
   const header = document.querySelector('.site-header');
   const onScroll = () => {
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 8);
@@ -71,7 +96,7 @@
         entry.target.classList.add('in');
         io.unobserve(entry.target);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' });
+    }, { threshold: 0.14, rootMargin: '0px 0px -24px 0px' });
     revealEls.forEach((el) => io.observe(el));
   } else {
     revealEls.forEach((el) => el.classList.add('in'));
@@ -80,7 +105,9 @@
   document.querySelectorAll('.faq details').forEach((detail) => {
     detail.addEventListener('toggle', () => {
       if (!detail.open) return;
-      document.querySelectorAll('.faq details').forEach((other) => {
+      const scope = detail.closest('.faq');
+      if (!scope) return;
+      scope.querySelectorAll('details').forEach((other) => {
         if (other !== detail) other.open = false;
       });
     });
@@ -88,9 +115,6 @@
 
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
-  const form = document.getElementById('contactForm');
-  const status = document.getElementById('formStatus');
 
   const clearFieldState = (field) => {
     field.removeAttribute('aria-invalid');
@@ -101,8 +125,12 @@
     field.focus();
   };
 
-  if (form && status) {
+  const getPhoneByType = (tipo) => PHONE_BY_TYPE[tipo] || '5491155857623';
+
+  document.querySelectorAll('.js-contact-form').forEach((form) => {
+    const status = form.querySelector('.form-status');
     const fields = Array.from(form.querySelectorAll('input, select, textarea'));
+
     fields.forEach((field) => {
       field.addEventListener('input', () => clearFieldState(field));
       field.addEventListener('change', () => clearFieldState(field));
@@ -110,8 +138,10 @@
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      status.textContent = '';
-      status.className = 'form-status';
+      if (status) {
+        status.textContent = '';
+        status.className = 'form-status';
+      }
       fields.forEach(clearFieldState);
 
       const data = new FormData(form);
@@ -120,64 +150,76 @@
       const email = String(data.get('email') || '').trim();
       const tipo = String(data.get('tipo') || '').trim();
       const mensaje = String(data.get('mensaje') || '').trim();
+      const origen = String(data.get('origen') || form.getAttribute('data-origin') || '').trim();
+      const requireEmail = form.getAttribute('data-require-email') === 'true';
+      const requireMessage = form.getAttribute('data-require-message') === 'true';
 
       const requiredChecks = [
-        { value: nombre, field: document.getElementById('f-nombre'), message: 'Completá tu nombre y apellido.' },
-        { value: tel, field: document.getElementById('f-tel'), message: 'Completá un teléfono de contacto.' },
-        { value: email, field: document.getElementById('f-email'), message: 'Completá un email válido.' },
-        { value: tipo, field: document.getElementById('f-tipo'), message: 'Seleccioná el tipo de consulta.' },
-        { value: mensaje, field: document.getElementById('f-msg'), message: 'Describí brevemente tu consulta.' }
+        { value: nombre, field: form.querySelector('[name="nombre"]'), message: 'Completá tu nombre y apellido.' },
+        { value: tel, field: form.querySelector('[name="telefono"]'), message: 'Completá un teléfono de contacto.' },
+        { value: tipo, field: form.querySelector('[name="tipo"]'), message: 'Seleccioná el tipo de consulta.' }
       ];
+
+      if (requireEmail) {
+        requiredChecks.push({ value: email, field: form.querySelector('[name="email"]'), message: 'Completá un email válido.' });
+      }
+
+      if (requireMessage) {
+        requiredChecks.push({ value: mensaje, field: form.querySelector('[name="mensaje"]'), message: 'Describí brevemente tu consulta.' });
+      }
 
       const missing = requiredChecks.find((item) => !item.value);
       if (missing && missing.field) {
         markInvalid(missing.field);
-        status.textContent = missing.message;
-        status.classList.add('err');
+        if (status) {
+          status.textContent = missing.message;
+          status.classList.add('err');
+        }
         return;
       }
 
-      const emailField = document.getElementById('f-email');
-      if (!/^\S+@\S+\.\S+$/.test(email) && emailField) {
+      const emailField = form.querySelector('[name="email"]');
+      if (email && !/^\S+@\S+\.\S+$/.test(email) && emailField) {
         markInvalid(emailField);
-        status.textContent = 'Revisá el email ingresado.';
-        status.classList.add('err');
+        if (status) {
+          status.textContent = 'Revisá el email ingresado.';
+          status.classList.add('err');
+        }
         return;
       }
 
-      const phoneByType = {
-        'Empresa / PYME': '5491155857623',
-        'Fraude bancario': '5491155857623',
-        'Despido / laboral': '5491154845455',
-        'ART': '5491154845455',
-        'Accidente de tránsito': '5491154845455',
-        'Daños y perjuicios': '5491154845455',
-        'Familia': '5491160231009',
-        'Divorcio': '5491160231009',
-        'Alimentos': '5491160231009',
-        'Sucesión': '5491160231009',
-        'Usucapión': '5491160231009',
-        'Amparo de salud': '5491155857623',
-        'Obra social / prepaga': '5491155857623',
-        'Defensa del consumidor': '5491155857623',
-        'Otro': '5491155857623'
-      };
-      const phone = phoneByType[tipo] || '5491155857623';
+      const consentField = form.querySelector('[name="consentimiento"]');
+      if (consentField instanceof HTMLInputElement && !consentField.checked) {
+        markInvalid(consentField);
+        if (status) {
+          status.textContent = 'Necesitamos tu conformidad para tratar los datos según la política de privacidad.';
+          status.classList.add('err');
+        }
+        return;
+      }
 
-      const text =
-        `Hola, soy ${nombre}.\n` +
-        `Quiero hacer una consulta con Estudio Jurídico TPG.\n\n` +
-        `Tipo de consulta: ${tipo}\n` +
-        `Teléfono: ${tel}\n` +
-        `Email: ${email}\n\n` +
-        `Detalle:\n${mensaje}`;
+      const phone = getPhoneByType(tipo);
+      const detailText = mensaje || 'Quiero recibir una orientación inicial sobre mi caso.';
+      const lines = [
+        `Hola, soy ${nombre}.`,
+        'Te escribo desde el sitio de Estudio Jurídico TPG.',
+        '',
+        `Tipo de consulta: ${tipo}`,
+        `Teléfono: ${tel}`
+      ];
 
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      if (email) lines.push(`Email: ${email}`);
+      if (origen) lines.push(`Origen: ${origen}`);
+      lines.push('', `Detalle: ${detailText}`);
+
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
       window.open(url, '_blank', 'noopener');
 
-      status.textContent = 'Abrimos WhatsApp con tu mensaje precargado. Confirmá el envío desde la aplicación.';
-      status.classList.add('ok');
+      if (status) {
+        status.textContent = 'Abrimos WhatsApp con tu mensaje precargado. Confirmá el envío desde la aplicación.';
+        status.classList.add('ok');
+      }
       form.reset();
     });
-  }
+  });
 })();
