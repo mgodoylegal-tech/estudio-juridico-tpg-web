@@ -147,6 +147,25 @@
     return `TPG-${timestamp}-${random}`;
   };
 
+  const isMobileDevice = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const openWhatsApp = (phone, message) => {
+    const encodedMessage = encodeURIComponent(message);
+    const webUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+
+    if (isMobileDevice()) {
+      const appUrl = `whatsapp://send?phone=${phone}&text=${encodedMessage}`;
+      window.location.href = appUrl;
+
+      window.setTimeout(() => {
+        if (!document.hidden) window.location.href = webUrl;
+      }, 1400);
+      return;
+    }
+
+    window.open(webUrl, '_blank', 'noopener');
+  };
+
   const submitLead = async (payload) => {
     if (!endpointConfigured()) {
       return { ok: false, skipped: true };
@@ -253,9 +272,7 @@
         user_agent: navigator.userAgent
       };
 
-      const url = `https://wa.me/${assignment.phone}?text=${encodeURIComponent(lines.join('\n'))}`;
-      const whatsappWindow = window.open('', '_blank');
-      if (whatsappWindow) whatsappWindow.opener = null;
+      const whatsappMessage = lines.join('\n');
 
       if (submitButton instanceof HTMLButtonElement) {
         submitButton.disabled = true;
@@ -287,11 +304,7 @@
           status.textContent = 'No pudimos registrar la consulta, pero podés continuar por WhatsApp.';
         }
       } finally {
-        if (whatsappWindow) {
-          whatsappWindow.location.href = url;
-        } else {
-          window.location.href = url;
-        }
+        openWhatsApp(assignment.phone, whatsappMessage);
 
         window.setTimeout(() => {
           if (submitButton instanceof HTMLButtonElement) {
