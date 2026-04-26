@@ -117,8 +117,8 @@ La web envía estos responsables:
 
 - `Fraude bancario`: Matías Godoy, `5491155857623`.
 - `Empresas / PYMES`: Matías Godoy, `5491155857623`.
-- `Laboral / ART`: Pablo Tuozzo, `5491154845455`.
-- `Daños / accidentes`: Pablo Tuozzo, `5491154845455`.
+- `Laboral / ART`: Pablo Tuozzo, `5491154825455`.
+- `Daños / accidentes`: Pablo Tuozzo, `5491154825455`.
 - `Sucesiones`: Iñaki Pericoli, `5491160231009`.
 - `Usucapión`: Iñaki Pericoli, `5491160231009`.
 - `Amparos de salud`: Matías Godoy, `5491155857623`.

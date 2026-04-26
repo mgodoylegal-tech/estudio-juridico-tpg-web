@@ -6,7 +6,7 @@
   const LAWYERS = {
     matias: { name: 'Matías Godoy', phone: '5491155857623' },
     inaki: { name: 'Iñaki Pericoli', phone: '5491160231009' },
-    pablo: { name: 'Pablo Tuozzo', phone: '5491154845455' }
+    pablo: { name: 'Pablo Tuozzo', phone: '5491154825455' }
   };
 
   const ASSIGNMENT_BY_TYPE = {
