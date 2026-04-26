@@ -153,17 +153,30 @@
     const encodedMessage = encodeURIComponent(message);
     const webUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
 
-    if (isMobileDevice()) {
-      const appUrl = `whatsapp://send?phone=${phone}&text=${encodedMessage}`;
-      window.location.href = appUrl;
+    if (isMobileDevice()) window.location.href = webUrl;
+    else window.open(webUrl, '_blank', 'noopener');
+  };
 
-      window.setTimeout(() => {
-        if (!document.hidden) window.location.href = webUrl;
-      }, 1400);
-      return;
+  const queueLeadSave = (payload) => {
+    if (!endpointConfigured()) return false;
+
+    const body = JSON.stringify(payload);
+    if ('sendBeacon' in navigator) {
+      const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+      return navigator.sendBeacon(LEADS_ENDPOINT, blob);
     }
 
-    window.open(webUrl, '_blank', 'noopener');
+    fetch(LEADS_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body
+    }).catch(() => {});
+
+    return true;
   };
 
   const submitLead = async (payload) => {
@@ -283,6 +296,17 @@
       if (status) {
         status.textContent = 'Registrando consulta...';
         status.classList.add('ok');
+      }
+
+      if (isMobileDevice()) {
+        queueLeadSave(leadPayload);
+        if (status) {
+          status.className = 'form-status ok';
+          status.textContent = 'Redirigiendo a WhatsApp...';
+        }
+        window.setTimeout(() => form.reset(), 700);
+        openWhatsApp(assignment.phone, whatsappMessage);
+        return;
       }
 
       try {
