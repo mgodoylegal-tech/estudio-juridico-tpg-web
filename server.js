@@ -26,7 +26,7 @@ const MIME = {
 http.createServer((req, res) => {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath === '/') urlPath = '/index.html';
-  const filePath = path.join(ROOT, urlPath);
+  let filePath = path.join(ROOT, urlPath);
 
   // Avoid path traversal
   if (!filePath.startsWith(ROOT)) {
@@ -34,6 +34,15 @@ http.createServer((req, res) => {
   }
 
   fs.stat(filePath, (err, stat) => {
+    if ((err || !stat.isFile()) && !path.extname(urlPath)) {
+      const htmlPath = path.join(ROOT, `${urlPath}.html`);
+      if (htmlPath.startsWith(ROOT) && fs.existsSync(htmlPath)) {
+        filePath = htmlPath;
+        stat = fs.statSync(filePath);
+        err = null;
+      }
+    }
+
     if (err || !stat.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
       fs.readFile(path.join(ROOT, '404.html'), (e, data) => {
