@@ -774,11 +774,24 @@ button:disabled {
 }
 
 .about-compact {
-  max-width: 900px;
+  max-width: 760px;
   margin: 0 auto;
   display: grid;
-  gap: 14px;
+  gap: 10px;
   text-align: center;
+}
+
+.about-compact p {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+#estudio {
+  padding-bottom: clamp(36px, 4.5vw, 56px);
+}
+
+#equipo {
+  padding-top: clamp(40px, 5vw, 64px);
 }
 
 .summary-grid .contact-card,
