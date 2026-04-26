@@ -713,6 +713,11 @@ section[aria-labelledby="home-services-title"] {
   font-weight: 700;
 }
 
+.optional {
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
 .field input,
 .field select,
 .field textarea {

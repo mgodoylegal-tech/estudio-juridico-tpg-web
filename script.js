@@ -6,7 +6,7 @@
   const LAWYERS = {
     matias: { name: 'Matías Godoy', phone: '5491155857623' },
     inaki: { name: 'Iñaki Pericoli', phone: '5491160231009' },
-    pablo: { name: 'Pablo Tuozzo', phone: '5491154825455' }
+    pablo: { name: 'Pablo Tuozzo', phone: '5491154845455' }
   };
 
   const ASSIGNMENT_BY_TYPE = {
@@ -25,6 +25,7 @@
     'Usucapión / inmuebles': LAWYERS.inaki,
     'Usucapión': LAWYERS.inaki,
     'Familia / divorcios': LAWYERS.inaki,
+    'Familia / divorcio / alimentos': LAWYERS.inaki,
     'Familia': LAWYERS.inaki,
     'Divorcio': LAWYERS.inaki,
     'Alimentos': LAWYERS.inaki,
@@ -242,6 +243,7 @@
       const tel = String(data.get('telefono') || '').trim();
       const email = String(data.get('email') || '').trim();
       const tipo = String(data.get('tipo') || '').trim();
+      const subtipo = String(data.get('subtipo') || '').trim();
       const mensaje = String(data.get('mensaje') || '').trim();
       const origen = String(data.get('origen') || form.getAttribute('data-origin') || '').trim();
       const requireEmail = form.getAttribute('data-require-email') === 'true';
@@ -287,6 +289,7 @@
         `Teléfono: ${tel}`
       ];
 
+      if (subtipo) lines.push(`Subtipo: ${subtipo}`);
       if (email) lines.push(`Email: ${email}`);
       if (origen) lines.push(`Origen: ${origen}`);
       lines.push('', `Detalle: ${detailText}`);
@@ -298,6 +301,7 @@
         telefono: tel,
         email,
         tipo_consulta: tipo,
+        subtipo_consulta: subtipo,
         mensaje: detailText,
         abogado_asignado: assignment.name,
         numero_whatsapp_asignado: assignment.phone,

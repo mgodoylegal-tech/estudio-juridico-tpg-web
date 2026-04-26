@@ -10,7 +10,7 @@ Esta guía deja el formulario de Estudio Jurídico TPG preparado para guardar ca
 4. En la fila 1 agregar estas columnas, en este orden:
 
 ```text
-lead_id | fecha_hora | nombre | telefono | email | tipo_consulta | mensaje | abogado_asignado | numero_whatsapp_asignado | origen | estado | pagina_origen | user_agent
+lead_id | fecha_hora | nombre | telefono | email | tipo_consulta | subtipo_consulta | mensaje | abogado_asignado | numero_whatsapp_asignado | origen | estado | pagina_origen | user_agent
 ```
 
 El campo `lead_id` lo genera la web con formato similar a `TPG-20260425183022-A1B2C3`.
@@ -46,6 +46,7 @@ function doPost(e) {
       clean(payload.telefono),
       clean(payload.email),
       clean(payload.tipo_consulta),
+      clean(payload.subtipo_consulta),
       clean(payload.mensaje),
       clean(payload.abogado_asignado),
       clean(payload.numero_whatsapp_asignado),
@@ -117,10 +118,11 @@ La web envía estos responsables:
 
 - `Fraude bancario`: Matías Godoy, `5491155857623`.
 - `Empresas / PYMES`: Matías Godoy, `5491155857623`.
-- `Laboral / ART`: Pablo Tuozzo, `5491154825455`.
-- `Daños / accidentes`: Pablo Tuozzo, `5491154825455`.
+- `Laboral / ART`: Pablo Tuozzo, `5491154845455`.
+- `Daños / accidentes`: Pablo Tuozzo, `5491154845455`.
 - `Sucesiones`: Iñaki Pericoli, `5491160231009`.
 - `Usucapión`: Iñaki Pericoli, `5491160231009`.
+- `Familia / divorcio / alimentos`: Iñaki Pericoli, `5491160231009`.
 - `Amparos de salud`: Matías Godoy, `5491155857623`.
 - `Otro`: Matías Godoy, `5491155857623`.
 
