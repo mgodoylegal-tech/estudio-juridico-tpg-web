@@ -734,6 +734,12 @@ section[aria-labelledby="home-services-title"] {
   box-shadow: 0 0 0 4px rgba(23, 54, 84, 0.12);
 }
 
+.btn:disabled,
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .field input[aria-invalid="true"],
 .field select[aria-invalid="true"],
 .field textarea[aria-invalid="true"] {

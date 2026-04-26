@@ -1,29 +1,37 @@
 (function () {
   'use strict';
 
-  const PHONE_BY_TYPE = {
-    'Fraude bancario': '5491155857623',
-    'Empresas / PYMES': '5491155857623',
-    'Empresa / PYME': '5491155857623',
-    'Despidos / laboral / ART': '5491154845455',
-    'Despido / laboral': '5491154845455',
-    'Laboral / ART': '5491154845455',
-    'ART': '5491154845455',
-    'Daños / accidentes': '5491154845455',
-    'Daños y perjuicios': '5491154845455',
-    'Accidente de tránsito': '5491154845455',
-    'Sucesiones / civil patrimonial': '5491160231009',
-    'Sucesión': '5491160231009',
-    'Usucapión / inmuebles': '5491160231009',
-    'Usucapión': '5491160231009',
-    'Familia / divorcios': '5491160231009',
-    'Familia': '5491160231009',
-    'Divorcio': '5491160231009',
-    'Alimentos': '5491160231009',
-    'Amparos de salud': '5491155857623',
-    'Obra social / prepaga': '5491155857623',
-    'Defensa del consumidor': '5491155857623',
-    'Otro': '5491155857623'
+  const LEADS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyUYzmPZcugyEtt6nUFWQBj-pgs9-tby6f9C1DYuNiAGSiv1enU1lQgejozUajvO9zWRg/exec';
+
+  const LAWYERS = {
+    matias: { name: 'Matías Godoy', phone: '5491155857623' },
+    inaki: { name: 'Iñaki Pericoli', phone: '5491160231009' },
+    pablo: { name: 'Pablo Tuozzo', phone: '5491154845455' }
+  };
+
+  const ASSIGNMENT_BY_TYPE = {
+    'Fraude bancario': LAWYERS.matias,
+    'Empresas / PYMES': LAWYERS.matias,
+    'Empresa / PYME': LAWYERS.matias,
+    'Despidos / laboral / ART': LAWYERS.pablo,
+    'Despido / laboral': LAWYERS.pablo,
+    'Laboral / ART': LAWYERS.pablo,
+    'ART': LAWYERS.pablo,
+    'Daños / accidentes': LAWYERS.pablo,
+    'Daños y perjuicios': LAWYERS.pablo,
+    'Accidente de tránsito': LAWYERS.pablo,
+    'Sucesiones / civil patrimonial': LAWYERS.inaki,
+    'Sucesión': LAWYERS.inaki,
+    'Usucapión / inmuebles': LAWYERS.inaki,
+    'Usucapión': LAWYERS.inaki,
+    'Familia / divorcios': LAWYERS.inaki,
+    'Familia': LAWYERS.inaki,
+    'Divorcio': LAWYERS.inaki,
+    'Alimentos': LAWYERS.inaki,
+    'Amparos de salud': LAWYERS.matias,
+    'Obra social / prepaga': LAWYERS.matias,
+    'Defensa del consumidor': LAWYERS.matias,
+    'Otro': LAWYERS.matias
   };
 
   const header = document.querySelector('.site-header');
@@ -125,7 +133,36 @@
     field.focus();
   };
 
-  const getPhoneByType = (tipo) => PHONE_BY_TYPE[tipo] || '5491155857623';
+  const endpointConfigured = () => (
+    LEADS_ENDPOINT &&
+    LEADS_ENDPOINT !== 'PEGAR_URL_DE_APPS_SCRIPT' &&
+    /^https:\/\/script\.google\.com\/macros\/s\//.test(LEADS_ENDPOINT)
+  );
+
+  const getAssignmentByType = (tipo) => ASSIGNMENT_BY_TYPE[tipo] || LAWYERS.matias;
+
+  const createLeadId = () => {
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+    const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+    return `TPG-${timestamp}-${random}`;
+  };
+
+  const submitLead = async (payload) => {
+    if (!endpointConfigured()) {
+      return { ok: false, skipped: true };
+    }
+
+    const response = await fetch(LEADS_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    return { ok: response.type === 'opaque' || response.ok };
+  };
 
   document.querySelectorAll('.js-contact-form').forEach((form) => {
     const status = form.querySelector('.form-status');
@@ -136,13 +173,15 @@
       field.addEventListener('change', () => clearFieldState(field));
     });
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (status) {
         status.textContent = '';
         status.className = 'form-status';
       }
       fields.forEach(clearFieldState);
+
+      const submitButton = form.querySelector('[type="submit"]');
 
       const data = new FormData(form);
       const nombre = String(data.get('nombre') || '').trim();
@@ -152,20 +191,16 @@
       const mensaje = String(data.get('mensaje') || '').trim();
       const origen = String(data.get('origen') || form.getAttribute('data-origin') || '').trim();
       const requireEmail = form.getAttribute('data-require-email') === 'true';
-      const requireMessage = form.getAttribute('data-require-message') === 'true';
 
       const requiredChecks = [
         { value: nombre, field: form.querySelector('[name="nombre"]'), message: 'Completá tu nombre y apellido.' },
         { value: tel, field: form.querySelector('[name="telefono"]'), message: 'Completá un teléfono de contacto.' },
-        { value: tipo, field: form.querySelector('[name="tipo"]'), message: 'Seleccioná el tipo de consulta.' }
+        { value: tipo, field: form.querySelector('[name="tipo"]'), message: 'Seleccioná el tipo de consulta.' },
+        { value: mensaje, field: form.querySelector('[name="mensaje"]'), message: 'Describí brevemente tu consulta.' }
       ];
 
       if (requireEmail) {
         requiredChecks.push({ value: email, field: form.querySelector('[name="email"]'), message: 'Completá un email válido.' });
-      }
-
-      if (requireMessage) {
-        requiredChecks.push({ value: mensaje, field: form.querySelector('[name="mensaje"]'), message: 'Describí brevemente tu consulta.' });
       }
 
       const missing = requiredChecks.find((item) => !item.value);
@@ -188,17 +223,7 @@
         return;
       }
 
-      const consentField = form.querySelector('[name="consentimiento"]');
-      if (consentField instanceof HTMLInputElement && !consentField.checked) {
-        markInvalid(consentField);
-        if (status) {
-          status.textContent = 'Necesitamos tu conformidad para tratar los datos según la política de privacidad.';
-          status.classList.add('err');
-        }
-        return;
-      }
-
-      const phone = getPhoneByType(tipo);
+      const assignment = getAssignmentByType(tipo);
       const detailText = mensaje || 'Quiero recibir una orientación inicial sobre mi caso.';
       const lines = [
         `Hola, soy ${nombre}.`,
@@ -212,14 +237,70 @@
       if (origen) lines.push(`Origen: ${origen}`);
       lines.push('', `Detalle: ${detailText}`);
 
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
-      window.open(url, '_blank', 'noopener');
+      const leadPayload = {
+        lead_id: createLeadId(),
+        fecha_hora: new Date().toISOString(),
+        nombre,
+        telefono: tel,
+        email,
+        tipo_consulta: tipo,
+        mensaje: detailText,
+        abogado_asignado: assignment.name,
+        numero_whatsapp_asignado: assignment.phone,
+        origen: origen || 'Web estudiojuridicotpg.com.ar',
+        estado: 'Nuevo',
+        pagina_origen: window.location.href,
+        user_agent: navigator.userAgent
+      };
+
+      const url = `https://wa.me/${assignment.phone}?text=${encodeURIComponent(lines.join('\n'))}`;
+      const whatsappWindow = window.open('', '_blank');
+      if (whatsappWindow) whatsappWindow.opener = null;
+
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = true;
+        submitButton.dataset.originalText = submitButton.textContent || '';
+        submitButton.textContent = 'Registrando consulta...';
+      }
 
       if (status) {
-        status.textContent = 'Abrimos WhatsApp con tu mensaje precargado. Confirmá el envío desde la aplicación.';
+        status.textContent = 'Registrando consulta...';
         status.classList.add('ok');
       }
-      form.reset();
+
+      try {
+        const result = await submitLead(leadPayload);
+
+        if (status) {
+          status.className = 'form-status';
+          if (result.ok) {
+            status.textContent = 'Consulta registrada. Redirigiendo a WhatsApp...';
+            status.classList.add('ok');
+          } else {
+            status.textContent = 'No pudimos registrar la consulta, pero podés continuar por WhatsApp.';
+            status.classList.add('err');
+          }
+        }
+      } catch (error) {
+        if (status) {
+          status.className = 'form-status err';
+          status.textContent = 'No pudimos registrar la consulta, pero podés continuar por WhatsApp.';
+        }
+      } finally {
+        if (whatsappWindow) {
+          whatsappWindow.location.href = url;
+        } else {
+          window.location.href = url;
+        }
+
+        window.setTimeout(() => {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+            submitButton.textContent = submitButton.dataset.originalText || 'Enviar consulta';
+          }
+          form.reset();
+        }, 900);
+      }
     });
   });
 })();
