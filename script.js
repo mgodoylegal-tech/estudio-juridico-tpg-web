@@ -66,6 +66,10 @@
   };
 
   if (toggle && mobileNav && backdrop) {
+    const getFocusableMenuItems = () => Array.from(
+      mobileNav.querySelectorAll('a[href], button:not([disabled])')
+    ).filter((item) => item instanceof HTMLElement && item.offsetParent !== null);
+
     toggle.addEventListener('click', () => {
       const open = toggle.getAttribute('aria-expanded') === 'true';
       setMenuState(!open);
@@ -84,8 +88,26 @@
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      if (toggle.getAttribute('aria-expanded') !== 'true') return;
+
+      if (event.key === 'Escape') {
         setMenuState(false);
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        const focusable = getFocusableMenuItems();
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
 
