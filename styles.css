@@ -1091,10 +1091,12 @@ button:disabled {
 
 .brand--footer .brand__text strong {
   color: rgba(255, 255, 255, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
 }
 
 .brand--footer .brand__text em {
-  color: var(--white);
+  display: none;
 }
 
 .site-footer h4 {
