@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const LEADS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyUYzmPZcugyEtt6nUFWQBj-pgs9-tby6f9C1DYuNiAGSiv1enU1lQgejozUajvO9zWRg/exec';
+  const LEADS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzhxkHbPiPVxMDHLWGuMomh0h_XfMXcSDgqZS_-kR4CByTXBpsAEzHira-Ku5Yb-yv4Pg/exec';
 
   const LAWYERS = {
     matias: { name: 'Matías Godoy', phone: '5491155857623' },
